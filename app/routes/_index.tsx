@@ -1,48 +1,30 @@
-import type { MetaFunction } from "@remix-run/node";
+import type { LinksFunction } from "@remix-run/node";
+import styleUrl from "~/styles/index.css";
 
-export const meta: MetaFunction = () => {
+export const links: LinksFunction = () => {
   return [
-    { title: "New Remix App" },
-    { name: "description", content: "Welcome to Remix!" },
+    { rel: "stylesheet", href: styleUrl },
   ];
 };
 
 export default function Index() {
   return (
-    <div className="font-sans p-4">
-      <h1 className="text-3xl">Welcome to Remix</h1>
-      <ul className="list-disc mt-4 pl-6 space-y-2">
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/quickstart"
-            rel="noreferrer"
-          >
-            5m Quick Start
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/start/tutorial"
-            rel="noreferrer"
-          >
-            30m Tutorial
-          </a>
-        </li>
-        <li>
-          <a
-            className="text-blue-700 underline visited:text-purple-900"
-            target="_blank"
-            href="https://remix.run/docs"
-            rel="noreferrer"
-          >
-            Remix Docs
-          </a>
-        </li>
-      </ul>
+    <div className="container">
+      <header className="header">
+        <h1>ページタイトル</h1>
+      </header>
+      <main className="main">
+        <div className="box new-post">新規投稿</div>
+        <div className="box search">検索</div>
+        <div className="notifications">
+          <h2>お知らせ</h2>
+          <ul>
+            <li>殿堂入りをするとここに掲載</li>
+            <li>いいね数の変動で形が変わります</li>
+          </ul>
+        </div>
+      </main>
     </div>
+
   );
 }
