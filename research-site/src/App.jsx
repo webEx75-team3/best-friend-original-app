@@ -14,6 +14,7 @@ function App() {
         <ul>
           <li>殿堂入りをするとここに掲載</li>
           <li>いいね数の変動で形が変わります</li>
+          <li>!</li>
         </ul>
       </footer>
     </div>
