@@ -1,28 +1,14 @@
-import pkg from '@remix-run/node';
+import React from 'react';
+import MapComponent from '../component/MapComponent';
 
-const { MetaFunction } = pkg;
 
-/**
- * @type {MetaFunction}
- */
-export const meta = () => {
-  return [
-    { title: "ずっともページ" },
-    { name: "description", content: "Welcome to Remix!" },
-  ];
-};
-
-export function links() {
-  // Assuming topLinks is defined elsewhere
-  return [...topLinks()];
+function App() {
+  return (
+    <div className="App">
+      <h1>Google Maps Search</h1>
+      <MapComponent  />
+    </div>
+  );
 }
 
-export default function Index() {
-  return <Top />;
-}
-
-
-
-
-
-
+export default App;
