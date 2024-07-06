@@ -1,5 +1,9 @@
 import React from "react";
-import "../stylesheets/top.css";
+//import "./top.css";  // CSSファイルをインポート
+
+//export function links() {
+//  return [{ rel: "stylesheet", href: "./top.css" }];
+//}
 
 const Top = () => {
   return (
@@ -22,3 +26,4 @@ const Top = () => {
 };
 
 export default Top;
+
