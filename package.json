@@ -10,6 +10,7 @@
     "start": "vite preview"
   },
   "dependencies": {
+    "@react-google-maps/api": "^2.19.3",
     "@remix-run/node": "^2.9.2",
     "@remix-run/react": "^2.9.2",
     "@remix-run/serve": "^2.9.2",
