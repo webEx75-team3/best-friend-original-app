@@ -1,9 +1,28 @@
-import React from "react";
-import "../stylesheets/index.css";
+import pkg from '@remix-run/node';
 
-const Index = () => {
-  return <div>Index こんにちは</div>;
+const { MetaFunction } = pkg;
 
+/**
+ * @type {MetaFunction}
+ */
+export const meta = () => {
+  return [
+    { title: "ずっともページ" },
+    { name: "description", content: "Welcome to Remix!" },
+  ];
 };
 
-export default Index;
+export function links() {
+  // Assuming topLinks is defined elsewhere
+  return [...topLinks()];
+}
+
+export default function Index() {
+  return <Top />;
+}
+
+
+
+
+
+
