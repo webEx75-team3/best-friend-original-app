@@ -212,3 +212,8 @@ export default App;
 
 
 
+<<<<<<< HEAD
+=======
+export default App;
+
+>>>>>>> b79108fedfea465c8137b676d754afed383c3b86
