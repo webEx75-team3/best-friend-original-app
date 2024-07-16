@@ -75,7 +75,7 @@ const Map = () => {
   
   return (
     <LoadScript
-      googleMapsApiKey="AIzaSyBk34MJtHoEDYT7xu9SW4Jl4ctJZP9JZ-U" // ここにAPIキーを入力
+      googleMapsApiKey="AIzaSyBk34MJtHoEDYT7xu9SW4Jl4ctJZP9JZ-U" 
       libraries={libraries}
       onLoad={handleApiLoad}
     >
