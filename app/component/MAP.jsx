@@ -1,5 +1,6 @@
-import React, { useCallback, useRef, useState } from 'react';
+import React, { useCallback, useRef, useState, useEffect } from 'react';
 import { GoogleMap, LoadScript, StandaloneSearchBox, Marker, InfoWindow, useJsApiLoader } from '@react-google-maps/api';
+import '../stylesheets/index.css';
 
 const libraries = ["places"];
 const mapContainerStyle = {
@@ -8,11 +9,11 @@ const mapContainerStyle = {
 };
 
 const center = {
-  lat: 35.6895, // 東京の緯度
-  lng: 139.6917, // 東京の経度
+  lat: 35.6895,
+  lng: 139.6917,
 };
 
-const MapWithSearchBox = () => {
+const MapWithSearchBox = ({ onThousandLikesSpotsChange }) => {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: "AIzaSyBk34MJtHoEDYT7xu9SW4Jl4ctJZP9JZ-U",
     libraries: libraries
@@ -65,10 +66,13 @@ const MapWithSearchBox = () => {
 
   const handleLike = (marker) => {
     const markerId = `${marker.position.lat}-${marker.position.lng}`;
-    setLikes((prevLikes) => ({
-      ...prevLikes,
-      [markerId]: (prevLikes[markerId] || 0) + 1,
-    }));
+    setLikes((prevLikes) => {
+      const newLikes = { ...prevLikes, [markerId]: (prevLikes[markerId] || 0) + 1 };
+      if (newLikes[markerId] === 1000) {
+        onThousandLikesSpotsChange(marker.name);
+      }
+      return newLikes;
+    });
   };
 
   const handleComment = (marker, comment) => {
@@ -79,9 +83,8 @@ const MapWithSearchBox = () => {
     }));
   };
 
-  // いいね数に応じてマーカーのアイコンを選択する関数
   const getMarkerIcon = (likesCount) => {
-    if (likesCount >= 10000) {
+    if (likesCount >= 1000) {
       return 'https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,ffd600,ff000000&scale=2.0'; 
     } else if (likesCount >= 100) {
       return 'https://mt.google.com/vt/icon/name=icons/onion/SHARED-mymaps-pin-container-bg_4x.png,icons/onion/SHARED-mymaps-pin-container_4x.png,icons/onion/1899-blank-shape_pin_4x.png&highlight=ff000000,e65100,ff000000&scale=2.0'; 
@@ -132,7 +135,7 @@ const MapWithSearchBox = () => {
           position={marker.position}
           icon={{
             url: getMarkerIcon(likes[`${marker.position.lat}-${marker.position.lng}`] || 0),
-            scaledSize: new window.google.maps.Size(40, 40) // マーカーのサイズを設定
+            scaledSize: new window.google.maps.Size(40, 40)
           }}
           onClick={() => handleMarkerClick(marker)}
         >
@@ -141,12 +144,23 @@ const MapWithSearchBox = () => {
               position={marker.position}
               onCloseClick={() => setSelectedPlace(null)}
             >
-              <div>
+              <div style={{ textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: "center" }}>
                 <h4>{marker.name}</h4>
                 <p>Likes: {likes[`${marker.position.lat}-${marker.position.lng}`] || 0}</p>
-                <button onClick={() => handleLike(marker)}>いいね!</button>
+                <button
+                  style={{
+                    padding: '8px 16px',
+                    fontSize: '18px',
+                    backgroundColor: '#008CBA',
+                    color: 'white',
+                    border: 'none',
+                    borderRadius: '4px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                  }}
+                  onClick={() => handleLike(marker)}>👍いいね</button>
                 <textarea
-                  rows={4}
+                  rows={10}
                   cols={30}
                   placeholder="ここにレビューをどうぞ!"
                   defaultValue={comments[`${marker.position.lat}-${marker.position.lng}`] || ''}
@@ -155,7 +169,6 @@ const MapWithSearchBox = () => {
                     handleComment(marker, value);
                   }}
                 />
-                <button onClick={() => handleComment(marker, comments[`${marker.position.lat}-${marker.position.lng}`])}>コメント欄</button>
               </div>
             </InfoWindow>
           )}
@@ -166,17 +179,33 @@ const MapWithSearchBox = () => {
 };
 
 const App = () => {
+  const [thousandLikesSpots, setThousandLikesSpots] = useState([]);
+
+  const handleThousandLikesSpotsChange = (spotName) => {
+    setThousandLikesSpots((prevSpots) => [...prevSpots, spotName]);
+  };
+
   return (
     <LoadScript
       googleMapsApiKey="AIzaSyBk34MJtHoEDYT7xu9SW4Jl4ctJZP9JZ-U"
       libraries={libraries}
     >
-      <MapWithSearchBox />
+      <MapWithSearchBox onThousandLikesSpotsChange={handleThousandLikesSpotsChange} />
+      <div className="banner">
+        <span className="banner-text">お知らせ欄</span>
+        <p>殿堂入りスポットがここに掲載されます。皆さん、気軽に👍いいねお願いします!</p>
+        <ul>
+          {thousandLikesSpots.map((spot, index) => (
+            <li key={index}>{spot}</li>
+          ))}
+        </ul>
+      </div>
     </LoadScript>
   );
 };
 
 export default App;
+
 
 
 
