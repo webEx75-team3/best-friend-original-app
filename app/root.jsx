@@ -16,7 +16,8 @@ export function Layout({ children }) {
         <Links />
       </head>
       <body>
-        {children}
+        {children} 
+        
         <ScrollRestoration />
         <Scripts />
       </body>
