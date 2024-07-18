@@ -25,6 +25,7 @@ const MapWithSearchBox = ({ onThousandLikesSpotsChange }) => {
   const [markers, setMarkers] = useState([]);
   const [likes, setLikes] = useState({});
   const [comments, setComments] = useState({});
+  const [currentComment, setCurrentComment] = useState("");
   const searchBox = useRef(null);
 
   const onLoad = useCallback((map) => {
@@ -58,10 +59,12 @@ const MapWithSearchBox = ({ onThousandLikesSpotsChange }) => {
 
   const handleMarkerClick = (marker) => {
     setSelectedPlace(marker);
+    setCurrentComment(comments[`${marker.position.lat}-${marker.position.lng}`] || "");
   };
 
   const handleMapClick = () => {
     setSelectedPlace(null);
+    setCurrentComment("");
   };
 
   const handleLike = (marker) => {
@@ -75,11 +78,15 @@ const MapWithSearchBox = ({ onThousandLikesSpotsChange }) => {
     });
   };
 
-  const handleComment = (marker, comment) => {
+  const handleCommentChange = (e) => {
+    setCurrentComment(e.target.value);
+  };
+
+  const handleCommentSave = (marker) => {
     const markerId = `${marker.position.lat}-${marker.position.lng}`;
     setComments((prevComments) => ({
       ...prevComments,
-      [markerId]: [...(prevComments[markerId] || []), comment],
+      [markerId]: currentComment,
     }));
   };
 
@@ -163,11 +170,9 @@ const MapWithSearchBox = ({ onThousandLikesSpotsChange }) => {
                   rows={10}
                   cols={30}
                   placeholder="ここにレビューをどうぞ!"
-                  defaultValue={comments[`${marker.position.lat}-${marker.position.lng}`] || ''}
-                  onChange={(e) => {
-                    const { value } = e.target;
-                    handleComment(marker, value);
-                  }}
+                  value={currentComment}
+                  onChange={handleCommentChange}
+                  onBlur={() => handleCommentSave(marker)}
                 />
               </div>
             </InfoWindow>
@@ -193,7 +198,11 @@ const App = () => {
       <MapWithSearchBox onThousandLikesSpotsChange={handleThousandLikesSpotsChange} />
       <div className="banner">
         <span className="banner-text">お知らせ欄</span>
-        <p>殿堂入りスポットがここに掲載されます。皆さん、気軽に👍いいねお願いします!</p>
+        <p>殿堂入りスポットがここに掲載されます! 皆さん、気軽に👍いいねお願いします! </p>
+        <h2>いいね数に応じてマーカーの色が変わります!
+          (1-5: 赤, 6-20: 青, 21-99: 緑, 100-999: オレンジ, 1000=殿堂入り: 黄色)
+        </h2>
+
         <ul>
           {thousandLikesSpots.map((spot, index) => (
             <li key={index}>{spot}</li>
@@ -205,6 +214,7 @@ const App = () => {
 };
 
 export default App;
+
 
 
 
